@@ -13,13 +13,23 @@ You can see the automatic interactive API documentation which is provided by Swa
 
 ## **Postman Requests**
 
+- CREATE
+
 ![](./img/Screenshot%202022-02-21%20201755.jpg)
 
+- READ_ALL
+ 
 ![](./img/Screenshot%202022-02-21%20201821.jpg)
 
+- READ_SPECIFIC
+ 
 ![](./img/Screenshot%202022-02-21%20201841.jpg)
 
+- UPDATE
+ 
 ![](./img/Screenshot%202022-02-21%20201900.jpg)
 
+- DELETE
+ 
 ![](./img/Screenshot%202022-02-21%20201923.jpg)
 
