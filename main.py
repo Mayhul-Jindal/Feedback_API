@@ -3,13 +3,13 @@ from fastapi import FastAPI, HTTPException, Response, status
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import schemas
-from typing import Optional
+
 app = FastAPI()
 
 # --------------------------Connecting database--------------------------
 while True:
     try:
-        conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="LifeOk1@",cursor_factory=RealDictCursor) # here yout credentials for the database comes
+        conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",password="<Your postgres instance password>",cursor_factory=RealDictCursor) # here yout credentials for the database comes
         cursor = conn.cursor()
         print('Successful connection established')
         break
@@ -39,8 +39,8 @@ def root():
     return {"Greetings":"Hello CSI👋."}
 
 # --------------------------[C]reate post data--------------------------
-@app.post("/posts")
-def post_data(post: schemas.Post,response: Response):
+@app.post("/post_feedback")
+def post_feedback(post: schemas.Post,response: Response):
     cursor.execute(""" insert into posts ("title","content") values (%s,%s) returning * """,(post.title, post.content)) # %s is used for santization purpose to avoid any sql injections
     post = cursor.fetchone()
     conn.commit()
@@ -51,23 +51,23 @@ def post_data(post: schemas.Post,response: Response):
             }
 
 # --------------------------[R]ead all the data--------------------------
-@app.get("/posts")
-def read_all_posts():
+@app.get("/get_feedbacks")
+def get_all_feedbacks():
     cursor.execute(""" select title,content,created_at from posts """)
     all_posts = cursor.fetchall()
     return {"data":all_posts}
 
 # --------------------------[R]ead a specific data--------------------------
-@app.get("/posts/{id}")
-def read_specific_post(id:  int):
+@app.get("/get_feedbacks/{id}")
+def get_specific_feedback(id:  int):
     post = find(id)
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"feedback with id: {id} was not found") # this is to handle 404 error
     return {"data":post}
 
 # --------------------------[U]pdate the data--------------------------
-@app.patch("/posts/{id}") # patch can be used too
-def update_post(id: int,post: schemas.Post):
+@app.patch("/update_feedback/{id}") # patch can be used too
+def update_feedback(id: int,post: schemas.Post):
     find_post = find(id)
     if not find_post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=f"post with id: {id} was not found")
@@ -78,8 +78,8 @@ def update_post(id: int,post: schemas.Post):
         "data":post}
 
 # --------------------------[Delete] the data--------------------------
-@app.delete("/posts/{id}")
-def delete_post(id: int , response: Response):
+@app.delete("/delete_feedback/{id}")
+def delete_feedback(id: int , response: Response):
     post = find(id)
     deleted_post = find_deleted(id)
     if deleted_post:
